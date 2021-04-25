@@ -69,6 +69,7 @@ namespace housekeepinggit.Controllers
             {
                 Location loc = _context.Location.Find(locid);
                 task.location = loc;
+                task.status = "Чакаща";
                 _context.Add(task);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -89,6 +90,14 @@ namespace housekeepinggit.Controllers
             {
                 return NotFound();
             }
+
+            if(task.status != "Чакаща")
+            {
+                //user tries to edit task that should not be editable
+                //return to index of tasks
+                return RedirectToAction("Index");
+            }
+
             return View(task);
         }
 
