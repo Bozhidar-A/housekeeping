@@ -55,6 +55,18 @@ namespace housekeepinggit.Controllers
                 .Select(x =>
                 new SelectListItem() { Text = x.ToString(), Value = x.ToString() });
 
+            //get category from appsettings
+
+            ViewBag.locs = _context.Location
+                .Select(a => new SelectListItem()
+                {
+                    Value = a.ID.ToString(),
+                    Text = a.name
+                })
+              .ToList();
+
+            //get locs from db
+
             return View();
         }
 
@@ -110,7 +122,7 @@ namespace housekeepinggit.Controllers
 
             var currsli = new SelectListItem()
             {
-                Value = task.location.ID.ToString(),
+                Value = task.location.ID.ToString() + " (current)",
                 Text = task.location.name
             };
             //get the current location and turn into SelectListItem
