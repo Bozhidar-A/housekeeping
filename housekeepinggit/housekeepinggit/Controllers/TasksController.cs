@@ -208,6 +208,25 @@ namespace housekeepinggit.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //public async Task<IActionResult> UpdateStatus(int? id)
+        //{
+        //    var currtask = await _context.Task.FindAsync(id);
+
+        //    if(currtask == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if(currtask.status == "За преглед")
+        //    {
+        //        currtask.status = "Изпълнена";
+        //    }
+
+        //    await _context.SaveChangesAsync();
+
+        //    return RedirectToAction(nameof(Index));
+        //}
+
         private bool TaskExists(int id)
         {
             return _context.Task.Any(e => e.ID == id);
