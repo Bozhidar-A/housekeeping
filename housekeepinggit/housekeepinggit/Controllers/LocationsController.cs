@@ -7,16 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using housekeepinggit.Data;
 using housekeepinggit.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace housekeepinggit.Controllers
 {
+    [Authorize(Roles = "Administrator,Client")]
     public class LocationsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public LocationsController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public LocationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+
+            _userManager = userManager;
         }
 
         // GET: Locations
@@ -58,6 +65,12 @@ namespace housekeepinggit.Controllers
         {
             if (ModelState.IsValid)
             {
+                location.creator = await _userManager.GetUserAsync(User);
+                if(location.creator == null)
+                {
+                    //something bad has happended 
+                    throw new Exception("User is null. Please signout and back in.");
+                }
                 _context.Add(location);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace housekeepinggit.Controllers
@@ -26,6 +27,31 @@ namespace housekeepinggit.Controllers
             _userManager = userManager;
         }
 
+        public async Task<ActionResult> AssignTaskForm(int? taskID)
+        {
+            if (taskID == null)
+            {
+                return NotFound();
+            }
+
+            var task = _context.Task.Include(l => l.location).Where(m => m.ID == taskID).First();
+
+            ViewBag.users = _context.Users
+            .Select(a => new SelectListItem()
+            {
+                Value = a.Id,
+                Text = $"{a.firstName} ({a.UserName}) {a.lastName}"
+            })
+          .ToList();
+
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            return View(task);
+
+        }
         public async Task<ActionResult> AssignTask(string userID, int? taskID)
         {
             if (userID == null | taskID == null)
@@ -35,12 +61,17 @@ namespace housekeepinggit.Controllers
 
             var user = _context.Users.Find(userID);
 
-            var task = _context.Users.Find(taskID);
+            var task = _context.Task.Find(taskID);
 
             if (user == null | task == null)
             {
                 return NotFound();
             }
+
+            task.houseKeeper = user;
+            task.status = "Назначена на домашен помощник";
+
+            _context.SaveChanges();
 
             return Redirect("/Home/Index");
         }

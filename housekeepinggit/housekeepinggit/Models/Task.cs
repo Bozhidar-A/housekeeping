@@ -20,5 +20,7 @@ namespace housekeepinggit.Models
         public string status { get; set; }
 
         public Location location { get; set; }
+        public ApplicationUser creator { get; set; }
+        public ApplicationUser houseKeeper { get; set; }
     }
 }

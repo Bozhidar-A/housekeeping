@@ -12,5 +12,6 @@ namespace housekeepinggit.Models
         public string address { get; set; }
 
         public ICollection<Task> tasks { get; set; }
+        public ApplicationUser creator { get; set; }
     }
 }

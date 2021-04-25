@@ -55,10 +55,30 @@
                 @Html.DisplayFor(modelItem => item.status)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a> |
-                <a asp-action="UpdateStatus" asp-route-id="@item.ID">Update Status</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (this.User.IsInRole("Administrator"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.ID">Force Status</a>
+                        <a asp-action="Details" asp-route-id="@item.ID">Details</a>
+                        if (item.status == "Чакаща")
+                        {
+                            <a asp-controller="Admin" asp-action="AssignTaskForm" asp-route-taskID="@item.ID">Assign HouseKeeper</a>
+                        }
+                    }
+                    if (this.User.IsInRole("Client"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.ID">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                        <a asp-action="UpdateStatusClient" asp-route-id="@item.ID">Update Status</a>
+                    }
+                    if (this.User.IsInRole("Housekeeper"))
+                    {
+                        <a asp-action="UpdateStatusHouseKeeper" asp-route-id="@item.ID">Mark as done</a>
+                    }
+                }
+
             </td>
         </tr>
 }

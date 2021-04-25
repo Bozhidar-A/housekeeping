@@ -8,25 +8,52 @@ using Microsoft.EntityFrameworkCore;
 using housekeepinggit.Data;
 using housekeepinggit.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace housekeepinggit.Controllers
 {
+    [Authorize(Roles = "Administrator,Client,Housekeeper")]
     public class TasksController : Controller
     {
         private readonly ApplicationDbContext _context;
 
         private readonly IConfiguration _configuration;
 
-        public TasksController(ApplicationDbContext context, IConfiguration configuration)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public TasksController(ApplicationDbContext context, IConfiguration configuration, UserManager<ApplicationUser> userManager)
         {
             _context = context;
 
             _configuration = configuration;
+
+            _userManager = userManager;
         }
 
         // GET: Tasks
         public async Task<IActionResult> Index()
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                if (this.User.IsInRole("Administrator"))
+                {
+                    return View(await _context.Task.ToListAsync());
+                }
+                else if(this.User.IsInRole("Client"))
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    return View(await _context.Task.
+                        Where(m => m.creator == user).ToListAsync());
+                }
+                else
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    return View(await _context.Task.
+                        Where(m => m.houseKeeper == user).ToListAsync());
+                }
+            }
             return View(await _context.Task.ToListAsync());
         }
 
@@ -82,6 +109,7 @@ namespace housekeepinggit.Controllers
                 Location loc = _context.Location.Find(locID);
                 task.location = loc;
                 task.status = "Чакаща";
+                task.creator = await _userManager.FindByNameAsync(User.Identity.Name);
                 _context.Add(task);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -208,24 +236,47 @@ namespace housekeepinggit.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //public async Task<IActionResult> UpdateStatus(int? id)
-        //{
-        //    var currtask = await _context.Task.FindAsync(id);
+        public async Task<IActionResult> UpdateStatusClient(int? id)
+        {
+            var currtask = await _context.Task.FindAsync(id);
 
-        //    if(currtask == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (currtask == null)
+            {
+                return NotFound();
+            }
 
-        //    if(currtask.status == "За преглед")
-        //    {
-        //        currtask.status = "Изпълнена";
-        //    }
+            if (currtask.status == "Чакаща")
+            {
+                currtask.status = "Отказана";
+            }
 
-        //    await _context.SaveChangesAsync();
+            if(currtask.status == "За преглед")
+            {
+                currtask.status = "Изпълнена";
+            }
 
-        //    return RedirectToAction(nameof(Index));
-        //}
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Housekeeper")]
+        public async Task<IActionResult> UpdateStatusHouseKeeper(int? id, IFormFile pic)
+        {
+            var currtask = await _context.Task.FindAsync(id);
+
+            if (currtask == null)
+            {
+                return NotFound();
+            }
+
+            currtask.status = "За преглед";
+
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
 
         private bool TaskExists(int id)
         {

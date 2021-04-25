@@ -43,6 +43,12 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.location.name)
         </dd>
+        <dd class="col-sm-10">
+            @if (Model.houseKeeper != null)
+            {
+                @Model.houseKeeper.firstName
+            }
+        </dd>
     </dl>
 </div>
 <div>

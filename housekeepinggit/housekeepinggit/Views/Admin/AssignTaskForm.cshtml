@@ -1,0 +1,22 @@
+﻿@model housekeepinggit.Models.Task
+
+@{
+    ViewData["Title"] = "Assign Task Form";
+}
+
+<form asp-action="AssignTask">
+    <input hidden name="taskID" value="@Model.ID"/>
+    <h1>Name</h1>
+    <h1>@Model.name</h1>
+    <br />
+    <h1>@Model.location.name</h1>
+    <h1>Location Name</h1>
+    <br />
+    <h1>@Model.budget</h1>
+    <h1>Budget</h1>
+    <br />
+    <select name="userID" asp-items="ViewBag.users">
+    </select>
+    <br />
+    <input type="submit" value="Submit"/>
+</form>
