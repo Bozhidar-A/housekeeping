@@ -238,3 +238,4 @@ D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit
 D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit\obj\Debug\netcoreapp3.1\Razor\Views\Admin\Index.cshtml.g.cs
 D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit\obj\Debug\netcoreapp3.1\Razor\Views\Admin\AssignTaskForm.cshtml.g.cs
 D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit\obj\Debug\netcoreapp3.1\Razor\Views\Tasks\UpdateStatusHouseKeeperForm.cshtml.g.cs
+D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit\obj\Debug\netcoreapp3.1\Razor\Views\Admin\ForceStatusForm.cshtml.g.cs

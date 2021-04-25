@@ -1,0 +1,13 @@
+﻿@model housekeepinggit.Models.Task
+<form asp-action="ForceStatus">
+    <h1>Force Status of Task</h1>
+    <br />
+    <h2>Name</h2>
+    <p>@Model.name</p>
+    <br />
+    <input hidden value="@Model.ID" name="taskID"/>
+    <select name="status" asp-items="ViewBag.status">
+    </select>
+    <br />
+    <input type="submit" value="Submit" />
+</form>

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace housekeepinggit.Controllers
 {
@@ -20,11 +21,46 @@ namespace housekeepinggit.Controllers
 
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        private readonly IConfiguration _configuration;
+
+        public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _context = context;
 
             _userManager = userManager;
+
+            _configuration = configuration;
+        }
+
+        public async Task<ActionResult> ForceStatusForm(int? taskID)
+        {
+            if (taskID == null)
+            {
+                return NotFound();
+            }
+
+            var task = _context.Task.Include(l => l.location).Where(m => m.ID == taskID).First();
+
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            //List<string> a = new List<string>();
+            //a.Append("a");
+            string[] a = { "Чакаща", "Назначена на домашен помощник", "За преглед", "Изпълнена", "Отказана" };
+            ViewBag.status = a.Select(g => new SelectListItem { Value = g.ToString(), Text = g.ToString() }).ToList();
+
+            return View(task);
+
+        }
+
+        public async Task<ActionResult> ForceStatus(int taskID, string status)
+        {
+            var task = _context.Task.Find(taskID);
+            task.status = status;
+            _context.SaveChanges();
+            return Redirect("/Home/Index");
         }
 
         public async Task<ActionResult> AssignTaskForm(int? taskID)

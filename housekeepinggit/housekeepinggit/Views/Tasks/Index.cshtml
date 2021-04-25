@@ -59,7 +59,7 @@
                 {
                     if (this.User.IsInRole("Administrator"))
                     {
-                        <a asp-action="Edit" asp-route-id="@item.ID">Force Status</a>
+                        <a asp-controller="Admin" asp-action="ForceStatusForm" asp-route-taskID="@item.ID">Force Status</a>
                         <a asp-action="Details" asp-route-id="@item.ID">Details</a>
                         if (item.status == "Чакаща")
                         {
