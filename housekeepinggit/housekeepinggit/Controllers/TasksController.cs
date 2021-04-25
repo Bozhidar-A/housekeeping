@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using housekeepinggit.Data;
 using housekeepinggit.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace housekeepinggit.Controllers
 {
@@ -14,9 +15,13 @@ namespace housekeepinggit.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public TasksController(ApplicationDbContext context)
+        private readonly IConfiguration _configuration;
+
+        public TasksController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+
+            _configuration = configuration;
         }
 
         // GET: Tasks
@@ -46,6 +51,10 @@ namespace housekeepinggit.Controllers
         // GET: Tasks/Create
         public IActionResult Create()
         {
+            ViewBag.category = _configuration.GetSection("TaskCategories").Get<List<string>>()
+                .Select(x =>
+                new SelectListItem() { Text = x.ToString(), Value = x.ToString() });
+
             return View();
         }
 

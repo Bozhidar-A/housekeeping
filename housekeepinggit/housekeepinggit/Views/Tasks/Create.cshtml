@@ -33,9 +33,9 @@
                 <span asp-validation-for="budget" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="category" class="control-label"></label>
-                <input asp-for="category" class="form-control" />
-                <span asp-validation-for="category" class="text-danger"></span>
+                <select asp-for="category" asp-items="ViewBag.category">
+                    <option disabled="disabled" selected="selected" value="Select category">Select category</option>
+                </select>
             </div>
             <div class="form-group">
                 <input name="locid" class="form-control" />
