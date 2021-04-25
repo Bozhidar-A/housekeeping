@@ -233,3 +233,6 @@ D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit
 D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Error.cshtml.g.cs
 D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ValidationScriptsPartial.cshtml.g.cs
 D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewImports.cshtml.g.cs
+D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit\obj\Debug\netcoreapp3.1\Razor\Views\Admin\Delete.cshtml.g.cs
+D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit\obj\Debug\netcoreapp3.1\Razor\Views\Admin\Details.cshtml.g.cs
+D:\papka s failove\prog files\repos\housekeeping\housekeepinggit\housekeepinggit\obj\Debug\netcoreapp3.1\Razor\Views\Admin\Index.cshtml.g.cs

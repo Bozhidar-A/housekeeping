@@ -105,7 +105,7 @@ namespace housekeepinggit.Areas.Identity.Pages.Account
                     {
                         _logger.LogInformation("User was added to user role.");
 
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        //await _signInManager.SignInAsync(user, isPersistent: false);
 
                         return RedirectToAction("Index", "Home");
                     }
