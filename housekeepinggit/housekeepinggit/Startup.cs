@@ -12,6 +12,7 @@ using housekeepinggit.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Globalization;
 
 namespace housekeepinggit
 {
@@ -57,6 +58,12 @@ namespace housekeepinggit
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            var cultureInfo = new CultureInfo("en-US");
+            cultureInfo.NumberFormat.NumberGroupSeparator = ".";
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             app.UseEndpoints(endpoints =>
             {

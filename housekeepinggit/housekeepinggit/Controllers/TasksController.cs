@@ -63,11 +63,11 @@ namespace housekeepinggit.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,name,description,endDate,budget,category")] Models.Task task, int locid)
+        public async Task<IActionResult> Create([Bind("ID,name,description,endDate,budget,category")] Models.Task task, int locID)
         {
             if (ModelState.IsValid)
             {
-                Location loc = _context.Location.Find(locid);
+                Location loc = _context.Location.Find(locID);
                 task.location = loc;
                 task.status = "Чакаща";
                 _context.Add(task);
@@ -85,7 +85,7 @@ namespace housekeepinggit.Controllers
                 return NotFound();
             }
 
-            var task = await _context.Task.FindAsync(id);
+            var task = await _context.Task.Include(l => l.location).Where(m => m.ID == id).FirstAsync();
             if (task == null)
             {
                 return NotFound();
@@ -98,6 +98,33 @@ namespace housekeepinggit.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var tempsl = _context.Location.Where(m => m.ID != task.location.ID)
+                .Select(a => new SelectListItem()
+              {
+                  Value = a.ID.ToString(),
+                  Text = a.name
+              })
+              .ToList();
+
+            //get all BUT the current loctions
+
+            var currsli = new SelectListItem()
+            {
+                Value = task.location.ID.ToString(),
+                Text = task.location.name
+            };
+            //get the current location and turn into SelectListItem
+
+            tempsl.Insert(0, currsli);
+            //insert at the front
+
+            //set to viewbag
+            ViewBag.locs = tempsl;
+
+            //set previd to viewbag
+            ViewBag.prevLocID = task.location.ID;
+
+
             return View(task);
         }
 
@@ -106,7 +133,7 @@ namespace housekeepinggit.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,name,description,endDate,budget,category")] Models.Task task)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,name,description,endDate,budget,category")] Models.Task task, int locID, int prevLocID)
         {
             if (id != task.ID)
             {
@@ -117,6 +144,10 @@ namespace housekeepinggit.Controllers
             {
                 try
                 {
+                    if(locID != prevLocID)
+                    {
+                        task.location = _context.Location.Find(locID);
+                    }
                     _context.Update(task);
                     await _context.SaveChangesAsync();
                 }
