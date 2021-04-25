@@ -124,11 +124,18 @@ namespace housekeepinggit.Controllers
                 return NotFound();
             }
 
-            var location = await _context.Location
+            var location = await _context.Location.Include(t => t.tasks)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (location == null)
             {
                 return NotFound();
+            }
+
+            if(location.tasks.Count != 0)
+            {
+                //user tried to delete location connected to tasks
+                //denied, return to index of locations
+                return RedirectToAction(nameof(Index));
             }
 
             return View(location);

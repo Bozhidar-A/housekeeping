@@ -95,7 +95,7 @@ namespace housekeepinggit.Controllers
             {
                 //user tries to edit task that should not be editable
                 //return to index of tasks
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
 
             return View(task);
